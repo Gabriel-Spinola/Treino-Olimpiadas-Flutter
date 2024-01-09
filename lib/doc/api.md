@@ -1,9 +1,18 @@
 # HTTP - Guide
+https://docs.flutter.dev/data-and-backend/networking
 
-## Deps
+## Setup
+### Deps
 ```yaml
 depedencies:
   http: ^1.1.2
+```
+
+### Perms
+`android/app/src/main/AndroidManifest.xml`
+```xml
+<!-- Required to fetch data from the internet. -->
+<uses-permission android:name="android.permission.INTERNET" />
 ```
 
 ## Consuming
@@ -15,19 +24,19 @@ Consuming comes into two parts:
 1. Modeling
 ```dart
 class Model {
-  String? field1;
-  String? field2;
-  int? field3;
+  String field1;
+  String field2;
+  int field3;
 
-  Model({this.fact, this.length});
+  Model({required this.field1, required this.field2, ...});
 
   // Model factory for constructing the model from a json Map 
   factory Model.fromJson(Map<String, dynamic> jsonData) {
-    return Model(
-      fact: jsonData['fact'],
-      length: jsonData['length'],
-      length: jsonData['length'],
-    );
+    return switch (jsonData) {
+      {'field1': String field1, ..., 'field3': int field3} =>
+        Model(field1: field1, ..., field3: field3),
+      _ => throw const FormatException('Failed to load model.'),
+    };
   }
 }
 ``` 
@@ -41,7 +50,7 @@ class API {
   static const _baseURL = 'https://urlfoda/';
 
   // NOTE - This can also be wrapped by a try and on/catch block 
-  Future<Model?> get() async {
+  Future<Model?> getData() async {
     var client = http.Client();
     var uri = Uri.parse('${_baseURL}route');
 
@@ -59,4 +68,32 @@ class API {
     return Model.fromJson(decoded);
   }
 }
+```
+
+3. Displaying the data
+```dart
+late Future<CatFactsModel> _data;
+
+@override
+void initState() {
+  super.initState();
+
+  var apiService = API();
+  _data = apiService.getData();
+}
+
+FutureBuilder<Model>(
+  future: _future,
+  builder: (context, snapshot) {
+    if (snapshot.hasData) {
+      return dataColumn(snapshot.data!);
+    }
+
+    if (snapshot.hasError) {
+      return Text('${snapshot.error}');
+    }
+
+    return const CircularProgressIndicator();
+  },
+),
 ```

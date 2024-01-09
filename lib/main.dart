@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 /// [ ] - Simple CRUD APP with api integratiom
 /// [ ] - Unit + Integration testing
 /// [ ] - Basics of UI building
-/// [ ] - Routing
+/// [X] - Routing
 /// [ ] - Building and porting
 
 void main() {

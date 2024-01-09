@@ -2,33 +2,36 @@
 
 import 'dart:convert';
 
-import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 
 class CatFactsModel {
-  String? fact;
-  int? length;
+  String fact;
+  int length;
 
-  CatFactsModel({this.fact, this.length});
+  CatFactsModel({required this.fact, required this.length});
 
   factory CatFactsModel.fromJson(Map<String, dynamic> jsonData) {
-    return CatFactsModel(
-      fact: jsonData['fact'],
-      length: jsonData['length'],
-    );
+    return switch (jsonData) {
+      {'fact': String fact, 'length': int length} =>
+        CatFactsModel(fact: fact, length: length),
+      _ => throw const FormatException('Failed to load album.'),
+    };
   }
 }
 
 class CatsApi {
   static const _baseURL = 'https://catfact.ninja/';
 
-  Future<CatFactsModel?> getCatsFact() async {
-    var client = http.Client();
+  final http.Client _client;
+
+  CatsApi() : _client = http.Client();
+
+  Future<CatFactsModel> getCatsFact() async {
     var uri = Uri.parse('${_baseURL}fact');
 
-    var response = await client.get(uri);
+    var response = await _client.get(uri);
     if (response.statusCode != 200) {
-      throw ErrorDescription("Response's not okay");
+      throw Exception("Response's not okay");
     }
 
     String converted = const Utf8Decoder().convert(response.bodyBytes);

@@ -1,6 +1,5 @@
 import 'package:cu/modules/cats_api.dart';
 import 'package:cu/widgets/nav_bar.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class CatsView extends StatefulWidget {
@@ -11,49 +10,32 @@ class CatsView extends StatefulWidget {
 }
 
 class _CatsViewState extends State<CatsView> {
-  CatFactsModel? _catsFact;
-  bool _isLoading = false;
-
-  Future<void> loadCatsFact() async {
-    final catsService = CatsApi();
-
-    setState(() => _isLoading = true);
-    _catsFact = await catsService.getCatsFact().catchError((error) {
-      if (kDebugMode) {
-        print("Failed to fetch fact");
-      }
-
-      return Future(() => null);
-    });
-    setState(() => _isLoading = false);
-  }
+  late Future<CatFactsModel> _catsFact;
 
   @override
   void initState() {
     super.initState();
 
-    loadCatsFact();
+    var catsService = CatsApi();
+    _catsFact = catsService.getCatsFact();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_isLoading) {
-      return scaffold(const CircularProgressIndicator());
-    }
-
     return scaffold(
-      Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            _catsFact?.fact ?? 'Fact not found',
-            textAlign: TextAlign.center,
-          ),
-          Text(
-            _catsFact?.length.toString() ?? 'no length',
-            textAlign: TextAlign.center,
-          )
-        ],
+      FutureBuilder<CatFactsModel>(
+        future: _catsFact,
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return dataColumn(snapshot.data!);
+          }
+
+          if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+
+          return const CircularProgressIndicator();
+        },
       ),
     );
   }
@@ -65,6 +47,16 @@ class _CatsViewState extends State<CatsView> {
         child: Center(child: body),
       ),
       bottomNavigationBar: const NavBar(),
+    );
+  }
+
+  Widget dataColumn(CatFactsModel data) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(data.fact),
+        Text(data.length.toString()),
+      ],
     );
   }
 }

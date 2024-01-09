@@ -66,7 +66,7 @@ class _NavBarState extends State<NavBar> {
 
     setState(() => AppRoutes.selectedIndex = index);
 
-    // Pop the current pop route
+    // Pop the current route
     Navigator.of(context).pop(AppRoutes.routes);
 
     // Push the new selected route

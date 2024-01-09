@@ -25,9 +25,14 @@ class _NavBarState extends State<NavBar> {
     return BottomNavigationBar(
       currentIndex: AppRoutes.selectedIndex,
       items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home), label: 'home'),
         BottomNavigationBarItem(
-            icon: Icon(Icons.catching_pokemon), label: 'cats'),
+          icon: Icon(Icons.home),
+          label: 'home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.catching_pokemon),
+          label: 'cats',
+        ),
       ],
       onTap: _onItemTapped,
     );
