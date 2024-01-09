@@ -1,10 +1,12 @@
-import 'package:cu/modules/cats_api.dart';
-import 'package:flutter/foundation.dart';
+import 'package:cu/routes/routes.dart';
+import 'package:cu/views/cats_view.dart';
+import 'package:cu/views/home.dart';
+import 'package:cu/widgets/nav_bar.dart';
 import 'package:flutter/material.dart';
 
-/// Project designed to lean mobile dev for my fiemg training application
-/// 
-/// TODO: 
+/// Project designed to learn mobile dev for my fiemg training assesment
+///
+/// TODO:
 /// [ ] - Simple CRUD APP with api integratiom
 /// [ ] - Unit + Integration testing
 /// [ ] - Basics of UI building
@@ -20,28 +22,13 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var catsApi = CatsApi();
-
-    catsApi.getCatsFact()
-      .then((value) {
-        if (kDebugMode) {
-          print('${value!.fact}no fact\nlength: ${value.length}');
-        }
-      })
-      .catchError((error) {
-        if (kDebugMode) {
-          print(error.toString());
-        }
-
-        return Future(() => null);
-      });
-
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MaterialApp(
+      title: "Training",
+      theme: ThemeData(primaryColor: Colors.white),
+      routes: {
+        AppRoutes.home: (_) => const HomeView(),
+        AppRoutes.cats: (_) => const CatsView(),
+      },
     );
   }
 }
