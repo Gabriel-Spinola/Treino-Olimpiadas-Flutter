@@ -1,5 +1,4 @@
 import 'package:cu/widgets/nav_bar.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatelessWidget {

@@ -1,7 +1,6 @@
 import 'package:cu/routes/routes.dart';
 import 'package:cu/views/cats_view.dart';
 import 'package:cu/views/home.dart';
-import 'package:cu/widgets/nav_bar.dart';
 import 'package:flutter/material.dart';
 
 /// Project designed to learn mobile dev for my fiemg training assesment

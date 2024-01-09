@@ -12,7 +12,6 @@ class CatsView extends StatefulWidget {
 
 class _CatsViewState extends State<CatsView> {
   CatFactsModel? _catsFact;
-
   bool _isLoading = false;
 
   Future<void> loadCatsFact() async {
@@ -62,7 +61,7 @@ class _CatsViewState extends State<CatsView> {
   Widget scaffold(Widget body) {
     return Scaffold(
       body: Padding(
-        padding: const EdgeInsets.all(80.0),
+        padding: const EdgeInsets.all(60.0),
         child: Center(child: body),
       ),
       bottomNavigationBar: const NavBar(),

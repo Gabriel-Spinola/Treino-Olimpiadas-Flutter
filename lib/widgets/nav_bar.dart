@@ -1,5 +1,4 @@
 import 'package:cu/routes/routes.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class NavBar extends StatefulWidget {
