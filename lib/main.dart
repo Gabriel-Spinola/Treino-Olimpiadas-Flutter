@@ -15,11 +15,10 @@ import 'package:flutter/material.dart';
 /// [X] - api integration
 /// 
 /// Flutter
-/// [ ] - Unit + Integration testing
-/// [ ] - Basics of UI building
-/// [X] - Routing
-/// [ ] - Building and porting
 /// [X] - Emulation
+/// [X] - Routing
+/// [X] - Basics of UI building
+/// [ ] - Building and porting 
 /// 
 /// Firebase
 /// [ ] - Simple CRUD APP
