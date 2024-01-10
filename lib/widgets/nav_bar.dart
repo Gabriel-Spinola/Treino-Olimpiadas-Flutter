@@ -33,6 +33,10 @@ class _NavBarState extends State<NavBar> {
           icon: Icon(Icons.catching_pokemon),
           label: 'cats',
         ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.store),
+          label: 'shaco-store',
+        ),
       ],
       onTap: _onItemTapped,
     );

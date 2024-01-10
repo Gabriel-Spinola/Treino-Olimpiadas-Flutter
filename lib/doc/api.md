@@ -13,6 +13,9 @@ depedencies:
 ```xml
 <!-- Required to fetch data from the internet. -->
 <uses-permission android:name="android.permission.INTERNET" />
+
+<application>
+...
 ```
 
 ## Consuming

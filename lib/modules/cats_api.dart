@@ -1,10 +1,10 @@
-// import 'dart:convert';
+// LINK - https://docs.flutter.dev/data-and-backend/networking
 
 import 'dart:convert';
-
+import 'package:cu/modules/imodel.dart';
 import 'package:http/http.dart' as http;
 
-class CatFactsModel {
+class CatFactsModel implements IModel {
   String fact;
   int length;
 
@@ -17,6 +17,11 @@ class CatFactsModel {
       _ => throw const FormatException('Failed to load album.'),
     };
   }
+
+  @override
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{'fact': fact, 'length': length};
+  }
 }
 
 class CatsApi {
@@ -24,7 +29,7 @@ class CatsApi {
 
   final http.Client _client;
 
-  CatsApi() : _client = http.Client();
+  CatsApi(this._client);
 
   Future<CatFactsModel> getCatsFact() async {
     var uri = Uri.parse('${_baseURL}fact');

@@ -1,6 +1,7 @@
 import 'package:cu/modules/cats_api.dart';
 import 'package:cu/widgets/nav_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 class CatsView extends StatefulWidget {
   const CatsView({super.key});
@@ -16,7 +17,9 @@ class _CatsViewState extends State<CatsView> {
   void initState() {
     super.initState();
 
-    var catsService = CatsApi();
+    var client = Client();
+    var catsService = CatsApi(client);
+
     _catsFact = catsService.getCatsFact();
   }
 
@@ -54,8 +57,8 @@ class _CatsViewState extends State<CatsView> {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(data.fact),
-        Text(data.length.toString()),
+        Text(data.fact, textAlign: TextAlign.center),
+        Text(data.length.toString(), textAlign: TextAlign.center),
       ],
     );
   }
