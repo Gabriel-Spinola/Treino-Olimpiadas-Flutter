@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 /// Project designed to learn mobile dev for my fiemg training assesment
+/// (obs: Focus on http)
 ///
 /// TODO:
 /// 
@@ -19,6 +20,7 @@ import 'package:flutter/material.dart';
 /// [X] - Routing
 /// [X] - Basics of UI building
 /// [ ] - Building and porting 
+/// [ ] - Persistent local data
 /// 
 /// Firebase
 /// [ ] - Simple CRUD APP

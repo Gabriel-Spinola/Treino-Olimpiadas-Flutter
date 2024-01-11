@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cu/modules/icollection.dart';
 import 'package:cu/modules/shaco_boxes_collection.dart';
 import 'package:cu/widgets/nav_bar.dart';
@@ -15,6 +14,42 @@ class ShacoStoreView extends StatefulWidget {
 class _ShacoStoreViewState extends State<ShacoStoreView> {
   late ShacoBoxesCollection _shacoCollection;
   late Future<QueryDocumentList> _shacoBoxes;
+
+  Future<void> addShacoBox() async {
+    try {
+      String? id = await _shacoCollection.create(ShacoBoxModel(
+        name: "test 1",
+        property: 'property',
+        amount: 2,
+      ));
+
+      if (kDebugMode) {
+        print("New shaco box ID: $id");
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print("Failed to create ShacoBoxModel");
+      }
+    }
+  }
+
+  Future<String?> removeShacoBox(String id) async {
+    try {
+      _shacoCollection.delete(id);
+
+      if (kDebugMode) {
+        print("deleted shaco box ID: $id");
+      }
+
+      return id;
+    } catch (error) {
+      if (kDebugMode) {
+        print("Failed to delete shacobox");
+      }
+
+      return null;
+    }
+  }
 
   @override
   void initState() {
@@ -49,28 +84,13 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
 
                 return const CircularProgressIndicator();
               },
-            )
+            ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          try {
-            String? id = await _shacoCollection.create(ShacoBoxModel(
-              name: "test 1",
-              property: 'property',
-              amount: 2,
-            ));
-
-            if (kDebugMode) {
-              print("New shaco box ID: $id");
-            }
-          } catch (error) {
-            if (kDebugMode) {
-              print("Failed to create ShacoBoxModel");
-            }
-          }
-        },
+        onPressed: addShacoBox,
+        child: const Icon(Icons.add),
       ),
       bottomNavigationBar: const NavBar(),
     );
@@ -82,13 +102,24 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
       shrinkWrap: true,
       itemCount: documents.length,
       itemBuilder: (context, index) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(documents[index].get(ShacoBoxField.name)),
-            Text(documents[index].get(ShacoBoxField.amount).toString()),
-            Text(documents[index].get(ShacoBoxField.property)),
-          ],
+        final document = documents[index];
+
+        return Dismissible(
+          key: Key(document.id),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(document.get(ShacoBoxField.name)),
+              Text(document.get(ShacoBoxField.amount).toString()),
+              Text(document.get(ShacoBoxField.property)),
+            ],
+          ),
+          onDismissed: (direction) async {
+            removeShacoBox(document.id);
+
+            ScaffoldMessenger.of(context)
+                .showSnackBar(const SnackBar(content: Text('dismissed')));
+          },
         );
       },
     );

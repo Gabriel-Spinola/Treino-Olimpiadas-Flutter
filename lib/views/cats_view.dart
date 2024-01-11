@@ -29,12 +29,12 @@ class _CatsViewState extends State<CatsView> {
       FutureBuilder<CatFactsModel>(
         future: _catsFact,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return dataColumn(snapshot.data!);
-          }
-
           if (snapshot.hasError) {
             return Text('${snapshot.error}');
+          }
+          
+          if (snapshot.hasData) {
+            return dataColumn(snapshot.data!);
           }
 
           return const CircularProgressIndicator();

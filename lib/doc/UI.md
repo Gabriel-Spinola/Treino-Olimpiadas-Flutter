@@ -18,6 +18,19 @@ necessary, already scrolled widgets
 To avoid performSize() assertions, consider adding both the scrollDirection and 
 shrinkWrap properties
 
+## Realtime changes
+Using the stream from the async api, you can achieve realtime builders for UI
+```dart
+StreamBuilder<QuerySnapshot>(
+  stream: someStream,
+  builder (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+    ...
+  }
+)
+```
+
+using future builder the changes will only reload when the page also reloads
+
 ## Routing
 The method I'm using is to have a seperate AppRoutes class, containing the all the routes
 and an index representing the current selected route. Then we use then to match
