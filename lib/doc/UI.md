@@ -15,6 +15,9 @@ Cross axis for vertical movement
 Used to handle list of widgets, also comes with garbage collection; cleaning, if
 necessary, already scrolled widgets
 
+To avoid performSize() assertions, consider adding both the scrollDirection and 
+shrinkWrap properties
+
 ## Routing
 The method I'm using is to have a seperate AppRoutes class, containing the all the routes
 and an index representing the current selected route. Then we use then to match

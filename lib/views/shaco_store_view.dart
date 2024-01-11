@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cu/modules/icollection.dart';
 import 'package:cu/modules/shaco_boxes_collection.dart';
 import 'package:cu/widgets/nav_bar.dart';
 import 'package:flutter/foundation.dart';
@@ -13,7 +14,7 @@ class ShacoStoreView extends StatefulWidget {
 
 class _ShacoStoreViewState extends State<ShacoStoreView> {
   late ShacoBoxesCollection _shacoCollection;
-  late Future<QuerySnapshot<Map<String, dynamic>>> _shacoBoxes;
+  late Future<QueryDocumentList> _shacoBoxes;
 
   @override
   void initState() {
@@ -31,15 +32,19 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
         child: Column(
           children: [
             const Text("Shaco Store"),
-            FutureBuilder<QuerySnapshot<Map<String, dynamic>>>(
+            FutureBuilder<QueryDocumentList>(
               future: _shacoBoxes,
               builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return dataColumn(snapshot.data!);
-                }
-
                 if (snapshot.hasError) {
                   return Text('${snapshot.error}');
+                }
+
+                if (snapshot.hasData && snapshot.data!.isEmpty) {
+                  return const Text("Document does not exist");
+                }
+
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return dataColumn(snapshot.data!);
                 }
 
                 return const CircularProgressIndicator();
@@ -71,9 +76,21 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
     );
   }
 
-  Widget dataColumn(QuerySnapshot<Map<String, dynamic>> querySnapshot) {
-    return Column(
-      children: [Text(querySnapshot.docs[0].get('name'))],
+  Widget dataColumn(QueryDocumentList documents) {
+    return ListView.builder(
+      scrollDirection: Axis.vertical,
+      shrinkWrap: true,
+      itemCount: documents.length,
+      itemBuilder: (context, index) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(documents[index].get(ShacoBoxField.name)),
+            Text(documents[index].get(ShacoBoxField.amount).toString()),
+            Text(documents[index].get(ShacoBoxField.property)),
+          ],
+        );
+      },
     );
   }
 }

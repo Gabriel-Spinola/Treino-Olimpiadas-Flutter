@@ -23,6 +23,9 @@ import 'package:flutter/material.dart';
 /// Firebase
 /// [ ] - Simple CRUD APP
 /// [ ] - Authentication
+/// 
+/// JWT
+/// [ ] - Auth
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

@@ -3,6 +3,12 @@ import 'package:cu/modules/ICollection.dart';
 import 'package:cu/modules/imodel.dart';
 import 'package:flutter/foundation.dart';
 
+class ShacoBoxField {
+  static const name = 'name';
+  static const property = 'property';
+  static const amount = 'amount';
+}
+
 class ShacoBoxModel implements IModel {
   String name;
   String property;
@@ -28,8 +34,12 @@ class ShacoBoxesCollection implements ICollection {
   static const String collection = "Shaco Boxes";
 
   @override
-  Future<QuerySnapshot<Map<String, dynamic>>> get() {
-    return FirebaseFirestore.instance.collection(collection).get();
+  Future<QueryDocumentList> get() async {
+    var querySnapshot =
+        await FirebaseFirestore.instance.collection(collection).get();
+    var documents = querySnapshot.docs;
+
+    return documents;
   }
 
   @override
