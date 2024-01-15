@@ -23,10 +23,10 @@ import 'package:flutter/material.dart';
 /// [ ] - Persistent local data
 /// 
 /// Firebase
-/// [ ] - Simple CRUD APP
-///   [ ] - Create
+/// [X] - Simple CRUD APP
+///   [X] - Create
 ///   [X] - Read
-///   [ ] - Update
+///   [X] - Update
 ///   [X] - Delete
 /// 
 /// 
