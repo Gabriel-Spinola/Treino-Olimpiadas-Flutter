@@ -13,13 +13,16 @@ class ShacoStoreView extends StatefulWidget {
 
 class _ShacoStoreViewState extends State<ShacoStoreView> {
   final _formKey = GlobalKey<FormState>();
+
   final _propertyField = TextEditingController();
   final _shacoBoxNameField = TextEditingController();
+
+  late List<TextEditingController> _formFields;
 
   late ShacoBoxesCollection _shacoCollection;
   late Future<QueryDocumentList> _shacoBoxes;
 
-  Future<void> addShacoBox(ShacoBoxModel data) async {
+  Future<void> _addShacoBox(ShacoBoxModel data) async {
     try {
       String? id = await _shacoCollection.create(data);
 
@@ -33,7 +36,7 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
     }
   }
 
-  Future<String?> removeShacoBox(String id) async {
+  Future<String?> _removeShacoBox(String id) async {
     try {
       _shacoCollection.delete(id);
 
@@ -51,10 +54,17 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
     }
   }
 
+  void _resetFormField() {
+    _propertyField.clear();
+    _shacoBoxNameField.clear();
+  }
+
   @override
   void initState() {
     _shacoCollection = ShacoBoxesCollection();
     _shacoBoxes = _shacoCollection.get();
+
+    _formFields = [_propertyField, _shacoBoxNameField];
 
     super.initState();
   }
@@ -108,20 +118,24 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
       itemCount: documents.length,
       itemBuilder: (context, index) {
         final document = documents[index];
+        var data = ShacoBoxModel(
+            name: document.get(ShacoBoxField.name),
+            property: document.get(ShacoBoxField.property),
+            amount: document.get(ShacoBoxField.amount));
 
         return Dismissible(
           key: Key(document.id),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(document.get(ShacoBoxField.name)),
-              Text(document.get(ShacoBoxField.amount).toString()),
-              Text(document.get(ShacoBoxField.property)),
-              openFormAlertButton(const Icon(Icons.edit)),
+              Text(data.name),
+              Text(data.amount.toString()),
+              Text(data.property),
+              openFormAlertButton(const Icon(Icons.edit), initialData: data),
             ],
           ),
           onDismissed: (direction) {
-            removeShacoBox(document.id);
+            _removeShacoBox(document.id);
 
             ScaffoldMessenger.of(context)
                 .showSnackBar(const SnackBar(content: Text('dismissed')));
@@ -131,10 +145,18 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
     );
   }
 
-  Widget openFormAlertButton(final Icon icon) {
+  Widget openFormAlertButton(final Icon icon, {ShacoBoxModel? initialData}) {
     return FloatingActionButton(
       child: icon,
       onPressed: () {
+        // NOTE - Prevents data from the 'edit' action to overwrite hintText on the 'create' action
+        _resetFormField();
+
+        if (initialData != null) {
+          _shacoBoxNameField.text = initialData.name;
+          _propertyField.text = initialData.property;
+        }
+
         showDialog<void>(
           context: context,
           builder: (context) => AlertDialog(
@@ -145,9 +167,7 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
                   right: -40,
                   top: -40,
                   child: InkResponse(
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
+                    onTap: () => Navigator.of(context).pop(),
                     child: const CircleAvatar(
                       backgroundColor: Colors.red,
                       child: Icon(Icons.close),
@@ -194,9 +214,11 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
                   amount: 1,
                 );
 
-                addShacoBox(data).then((value) =>
-                  Navigator.of(context).pop()
-                );
+                _addShacoBox(data).then((value) {
+                  _resetFormField();
+
+                  Navigator.of(context).pop();
+                });
               },
             ),
           ),
