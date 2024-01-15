@@ -14,6 +14,7 @@ import 'package:flutter/material.dart';
 /// 
 /// HTTP:
 /// [X] - api integration
+/// [ ] - API integrated APP
 /// 
 /// Flutter
 /// [X] - Emulation
