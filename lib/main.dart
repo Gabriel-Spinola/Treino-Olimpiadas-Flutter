@@ -24,7 +24,11 @@ import 'package:flutter/material.dart';
 /// 
 /// Firebase
 /// [ ] - Simple CRUD APP
-/// [ ] - Authentication
+///   [ ] - Create
+///   [X] - Read
+///   [ ] - Update
+///   [X] - Delete
+/// 
 /// 
 /// JWT
 /// [ ] - Auth

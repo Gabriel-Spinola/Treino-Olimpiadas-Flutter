@@ -12,16 +12,16 @@ class ShacoStoreView extends StatefulWidget {
 }
 
 class _ShacoStoreViewState extends State<ShacoStoreView> {
+  final _formKey = GlobalKey<FormState>();
+  final _propertyField = TextEditingController();
+  final _shacoBoxNameField = TextEditingController();
+
   late ShacoBoxesCollection _shacoCollection;
   late Future<QueryDocumentList> _shacoBoxes;
 
-  Future<void> addShacoBox() async {
+  Future<void> addShacoBox(ShacoBoxModel data) async {
     try {
-      String? id = await _shacoCollection.create(ShacoBoxModel(
-        name: "test 1",
-        property: 'property',
-        amount: 2,
-      ));
+      String? id = await _shacoCollection.create(data);
 
       if (kDebugMode) {
         print("New shaco box ID: $id");
@@ -53,10 +53,18 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
 
   @override
   void initState() {
-    super.initState();
-
     _shacoCollection = ShacoBoxesCollection();
     _shacoBoxes = _shacoCollection.get();
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _propertyField.dispose();
+    _shacoBoxNameField.dispose();
+
+    super.dispose();
   }
 
   @override
@@ -88,15 +96,12 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: addShacoBox,
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: openFormAlertButton(const Icon(Icons.add)),
       bottomNavigationBar: const NavBar(),
     );
   }
 
-  Widget dataColumn(QueryDocumentList documents) {
+  Widget dataColumn(final QueryDocumentList documents) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -112,9 +117,10 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
               Text(document.get(ShacoBoxField.name)),
               Text(document.get(ShacoBoxField.amount).toString()),
               Text(document.get(ShacoBoxField.property)),
+              openFormAlertButton(const Icon(Icons.edit)),
             ],
           ),
-          onDismissed: (direction) async {
+          onDismissed: (direction) {
             removeShacoBox(document.id);
 
             ScaffoldMessenger.of(context)
@@ -122,6 +128,101 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
           },
         );
       },
+    );
+  }
+
+  Widget openFormAlertButton(final Icon icon) {
+    return FloatingActionButton(
+      child: icon,
+      onPressed: () {
+        showDialog<void>(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Stack(
+              clipBehavior: Clip.none,
+              children: <Widget>[
+                Positioned(
+                  right: -40,
+                  top: -40,
+                  child: InkResponse(
+                    onTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const CircleAvatar(
+                      backgroundColor: Colors.red,
+                      child: Icon(Icons.close),
+                    ),
+                  ),
+                ),
+                shacoBoxForm(),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget shacoBoxForm() {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          textFormField(
+            'New shaco box name',
+            'Please enter a name',
+            _shacoBoxNameField,
+          ),
+          textFormField(
+            'New shaco box property',
+            'Please enter a property',
+            _propertyField,
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8),
+            child: ElevatedButton(
+              child: const Text('Submit'),
+              onPressed: () {
+                if (!_formKey.currentState!.validate()) {
+                  // TODO - Handle error case
+                  return;
+                }
+
+                var data = ShacoBoxModel(
+                  name: _shacoBoxNameField.text,
+                  property: _propertyField.text,
+                  amount: 1,
+                );
+
+                addShacoBox(data).then((value) =>
+                  Navigator.of(context).pop()
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget textFormField(
+    final String hintText,
+    final String emptyInputMessage,
+    TextEditingController controller,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(hintText: hintText),
+        validator: (value) {
+          if (value == null || value.isEmpty) {
+            return emptyInputMessage;
+          }
+
+          return null;
+        },
+      ),
     );
   }
 }

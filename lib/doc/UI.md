@@ -122,3 +122,8 @@ void dispose() {
   // Dispose implementation
 }
 ```
+
+## Dialog
+```dart
+showDialog(context: context, builder: (context) => AlertDialog());
+```

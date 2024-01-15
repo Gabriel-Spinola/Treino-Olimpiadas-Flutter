@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cu/modules/ICollection.dart';
 import 'package:cu/modules/imodel.dart';
-import 'package:flutter/foundation.dart';
 
 class ShacoBoxField {
   static const name = 'name';
@@ -38,7 +37,7 @@ class ShacoBoxesCollection implements ICollection {
     var querySnapshot =
         await FirebaseFirestore.instance.collection(collection).get();
     var documents = querySnapshot.docs;
-
+    
     return documents;
   }
 
@@ -60,5 +59,9 @@ class ShacoBoxesCollection implements ICollection {
     await FirebaseFirestore.instance.collection(collection).doc(id).delete();
 
     return id;
+  }
+
+  Future<void> update() async {
+    
   }
 }
