@@ -29,6 +29,7 @@ import 'package:flutter/material.dart';
 ///   [X] - Read
 ///   [X] - Update
 ///   [X] - Delete
+/// [ ] - Add realtime capabilities
 /// 
 /// 
 /// JWT

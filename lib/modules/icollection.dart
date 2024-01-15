@@ -8,4 +8,6 @@ abstract class ICollection {
   Future<QueryDocumentList> get();
   DocumentReference<Map<String, dynamic>> getById(String id);
   Future<void> create(IModel data);
+  Future<String?> delete(String id);
+  Future<void> update(String id, IModel data);
 }

@@ -57,12 +57,14 @@ class ShacoBoxesCollection implements ICollection {
     return ref.id;
   }
 
+  @override
   Future<String?> delete(String id) async {
     await FirebaseFirestore.instance.collection(collection).doc(id).delete();
 
     return id;
   }
 
+  @override
   Future<void> update(String id, IModel data) async {
     return FirebaseFirestore.instance
         .collection(collection)
