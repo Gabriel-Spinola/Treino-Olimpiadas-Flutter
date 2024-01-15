@@ -36,6 +36,20 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
     }
   }
 
+  Future<void> _updateShacoBox(String id, ShacoBoxModel data) async {
+    try {
+      await _shacoCollection.update(id, data);
+
+      if (kDebugMode) {
+        print("New shaco box ID: $id");
+      }
+    } catch (error) {
+      if (kDebugMode) {
+        print("Failed to create ShacoBoxModel");
+      }
+    }
+  }
+
   Future<String?> _removeShacoBox(String id) async {
     try {
       _shacoCollection.delete(id);
@@ -55,8 +69,9 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
   }
 
   void _resetFormField() {
-    _propertyField.clear();
-    _shacoBoxNameField.clear();
+    for (var field in _formFields) {
+      field.clear();
+    }
   }
 
   @override
@@ -71,8 +86,9 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
 
   @override
   void dispose() {
-    _propertyField.dispose();
-    _shacoBoxNameField.dispose();
+    for (var field in _formFields) {
+      field.dispose();
+    }
 
     super.dispose();
   }
@@ -97,7 +113,7 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return dataColumn(snapshot.data!);
+                  return _dataColumn(snapshot.data!);
                 }
 
                 return const CircularProgressIndicator();
@@ -106,12 +122,12 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
           ],
         ),
       ),
-      floatingActionButton: openFormAlertButton(const Icon(Icons.add)),
+      floatingActionButton: _openFormAlertButton(const Icon(Icons.add)),
       bottomNavigationBar: const NavBar(),
     );
   }
 
-  Widget dataColumn(final QueryDocumentList documents) {
+  Widget _dataColumn(final QueryDocumentList documents) {
     return ListView.builder(
       scrollDirection: Axis.vertical,
       shrinkWrap: true,
@@ -119,6 +135,7 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
       itemBuilder: (context, index) {
         final document = documents[index];
         var data = ShacoBoxModel(
+            id: document.id,
             name: document.get(ShacoBoxField.name),
             property: document.get(ShacoBoxField.property),
             amount: document.get(ShacoBoxField.amount));
@@ -131,7 +148,7 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
               Text(data.name),
               Text(data.amount.toString()),
               Text(data.property),
-              openFormAlertButton(const Icon(Icons.edit), initialData: data),
+              _openFormAlertButton(const Icon(Icons.edit), initialData: data),
             ],
           ),
           onDismissed: (direction) {
@@ -145,7 +162,7 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
     );
   }
 
-  Widget openFormAlertButton(final Icon icon, {ShacoBoxModel? initialData}) {
+  Widget _openFormAlertButton(final Icon icon, {ShacoBoxModel? initialData}) {
     return FloatingActionButton(
       child: icon,
       onPressed: () {
@@ -174,7 +191,7 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
                     ),
                   ),
                 ),
-                shacoBoxForm(),
+                _shacoBoxForm(initialData?.id),
               ],
             ),
           ),
@@ -183,17 +200,17 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
     );
   }
 
-  Widget shacoBoxForm() {
+  Widget _shacoBoxForm(String? id) {
     return Form(
       key: _formKey,
       child: Column(
         children: [
-          textFormField(
+          _textFormField(
             'New shaco box name',
             'Please enter a name',
             _shacoBoxNameField,
           ),
-          textFormField(
+          _textFormField(
             'New shaco box property',
             'Please enter a property',
             _propertyField,
@@ -214,7 +231,17 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
                   amount: 1,
                 );
 
-                _addShacoBox(data).then((value) {
+                if (id == null) {
+                  _addShacoBox(data).then((value) {
+                    _resetFormField();
+
+                    Navigator.of(context).pop();
+                  });
+
+                  return;
+                }
+
+                _updateShacoBox(id, data).then((value) {
                   _resetFormField();
 
                   Navigator.of(context).pop();
@@ -227,7 +254,7 @@ class _ShacoStoreViewState extends State<ShacoStoreView> {
     );
   }
 
-  Widget textFormField(
+  Widget _textFormField(
     final String hintText,
     final String emptyInputMessage,
     TextEditingController controller,

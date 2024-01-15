@@ -4,7 +4,7 @@ use default setup documentation
 ## Firestore Documentation
 https://firebase.flutter.dev/docs/firestore/usage/
 
-## Realtieme changes
+## Realtime changes
 https://firebase.flutter.dev/docs/firestore/usage/#realtime-changes
 
 ## Collection structure

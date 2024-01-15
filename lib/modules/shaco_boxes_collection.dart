@@ -9,11 +9,13 @@ class ShacoBoxField {
 }
 
 class ShacoBoxModel implements IModel {
+  String? id;
   String name;
   String property;
   int amount;
 
   ShacoBoxModel({
+    this.id,
     required this.name,
     required this.property,
     required this.amount,
@@ -61,7 +63,7 @@ class ShacoBoxesCollection implements ICollection {
     return id;
   }
 
-  Future<void> update() async {
-    
+  Future<void> update(String id, IModel data) async {
+    return FirebaseFirestore.instance.collection(collection).doc(id).update(data.toMap());
   }
 }
