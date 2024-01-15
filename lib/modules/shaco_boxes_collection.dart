@@ -39,7 +39,7 @@ class ShacoBoxesCollection implements ICollection {
     var querySnapshot =
         await FirebaseFirestore.instance.collection(collection).get();
     var documents = querySnapshot.docs;
-    
+
     return documents;
   }
 
@@ -64,6 +64,9 @@ class ShacoBoxesCollection implements ICollection {
   }
 
   Future<void> update(String id, IModel data) async {
-    return FirebaseFirestore.instance.collection(collection).doc(id).update(data.toMap());
+    return FirebaseFirestore.instance
+        .collection(collection)
+        .doc(id)
+        .update(data.toMap());
   }
 }
