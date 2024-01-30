@@ -18,6 +18,10 @@ class Avocado:
   price: float
   amount: int
 
+@app.get("/ping/")
+def ping():
+  return 'pong', 200
+
 @app.get("/avocado/")
 def get_avocados():
   try: 
@@ -25,7 +29,7 @@ def get_avocados():
 
     return jsonify(res), 200
   except:
-    return 'Failed to fetch avocados', 300
+    return 'Failed to fetch avocados', 500
 
 
 @app.get('/avocado/<int:id>')
@@ -35,13 +39,15 @@ def get_avocado_by_id(avocado_id: int):
 
     return jsonify(res), 200
   except:
-    return f'Failed fetch avocado with id: {id}', 300
+    return f'Failed fetch avocado with id: {id}', 500
 
 @app.post('/avocado/')
 def add_avocado():
   try:
-    print(request.get_json())
+    res = request.get_json()
 
-    return '', 204
+    avocado = Avocado(name=res['name'], amount=res['amount'], price=res['price'])
+
+    return , 201
   except:
-    return '', 300
+    return 'Failed to create new avocado item', 500
