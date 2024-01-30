@@ -3,3 +3,5 @@ ios/
 macos/
 web/
 windows/
+
+*.env
