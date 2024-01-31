@@ -100,3 +100,13 @@ FutureBuilder<Model>(
   },
 ),
 ```
+
+in order to se providers you have to add it to the pubspec
+
+in order to conver json data to other data type than string
+
+convert it to string first then the correct data type
+i.e. `double.parse(jsonData['price'].toString())`
+
+in order to retrieve multople data
+loop the decoded data

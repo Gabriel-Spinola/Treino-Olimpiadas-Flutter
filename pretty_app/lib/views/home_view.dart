@@ -2,10 +2,26 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:pretty_app/components/avocado_item_tile.dart';
+import 'package:pretty_app/modules/avocados_module.dart';
 import 'package:pretty_app/views/intro_view.dart';
 
-class HomeView extends StatelessWidget {
+class HomeView extends StatefulWidget {
   const HomeView({super.key});
+
+  @override
+  State<HomeView> createState() => _HomeViewState();
+}
+
+class _HomeViewState extends State<HomeView> {
+  late Future<List<AvocadoModel>> _avocados;
+
+  @override
+  void initState() {
+    var apiService = AvocadoAPI();
+    _avocados = apiService.getAvocados();
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,12 +54,32 @@ class HomeView extends StatelessWidget {
 
               // Grid
               Expanded(
-                child: GridView.builder(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                  ),
-                  itemBuilder: (context, index) {
-                    return const AvocadoItemTile();
+                child: FutureBuilder<List<AvocadoModel>>(
+                  future: _avocados,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Text('${snapshot.error}');
+                    }
+
+                    if (snapshot.hasData && snapshot.data!.isEmpty) {
+                      return const Text("No data found");
+                    }
+
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return GridView.builder(
+                        itemCount: snapshot.data!.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                        ),
+                        itemBuilder: (context, index) {
+                          var model = snapshot.data![index];
+
+                          return AvocadoItemTile(model: model);
+                        },
+                      );
+                    }
+
+                    return const CircularProgressIndicator();
                   },
                 ),
               ),

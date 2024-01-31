@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:pretty_app/modules/avocados_module.dart';
 
 class AvocadoItemTile extends StatelessWidget {
-  const AvocadoItemTile({super.key});
+  final AvocadoModel model;
+
+  const AvocadoItemTile({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
-    return const Text("HI");
+    return Row(children: [
+      Text(model.id.toString()),
+      Text(model.name),
+      Text(model.price.toString()),
+      Text(model.amount.toString()),
+    ],);
   }
 }

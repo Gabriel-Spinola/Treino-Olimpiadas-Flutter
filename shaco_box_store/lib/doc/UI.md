@@ -127,3 +127,10 @@ void dispose() {
 ```dart
 showDialog(context: context, builder: (context) => AlertDialog());
 ```
+
+## Grids
+In order to create grid use the GridView.builder
+
+SliverGridDelegateWithFixedCrossAxisCount makes it so we can hae a limited amount of item in the cross axis
+
+We can add a Expanded so the list is scrollable and avoid sizing errors
