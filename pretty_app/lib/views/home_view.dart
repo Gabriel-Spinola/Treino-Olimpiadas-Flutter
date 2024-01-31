@@ -68,8 +68,11 @@ class _HomeViewState extends State<HomeView> {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return GridView.builder(
                         itemCount: snapshot.data!.length,
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        padding: const EdgeInsets.all(12.0),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
+                          childAspectRatio: 1 / 1.3,
                         ),
                         itemBuilder: (context, index) {
                           var model = snapshot.data![index];
@@ -87,6 +90,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(onPressed: () {}),
     );
   }
 }

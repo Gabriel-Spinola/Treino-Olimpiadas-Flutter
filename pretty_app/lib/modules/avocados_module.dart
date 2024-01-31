@@ -63,12 +63,7 @@ class AvocadoAPI extends ChangeNotifier {
     }
 
     List<AvocadoModel> avocados = List.empty(growable: true);
-    String converted = const Utf8Decoder().convert(response.bodyBytes);
-
-    // Decode to json
-    dynamic decoded = json.decode(converted);
-
-    // print(decoded);
+    dynamic decoded = jsonDecode(response.body);
 
     for (Map<String, dynamic> data in decoded['data']) {
       avocados.add(AvocadoModel.fromJson(data));

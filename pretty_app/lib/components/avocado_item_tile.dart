@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:pretty_app/modules/avocados_module.dart';
 
 class AvocadoItemTile extends StatelessWidget {
@@ -8,11 +9,30 @@ class AvocadoItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(children: [
-      Text(model.id.toString()),
-      Text(model.name),
-      Text(model.price.toString()),
-      Text(model.amount.toString()),
-    ],);
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        padding: const EdgeInsets.all(12.0),
+        decoration: BoxDecoration(
+          color: Colors.green[100],
+          borderRadius: BorderRadius.circular(12.0),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Image.asset(
+              'lib/assets/avocado.png',
+              height: 64.0,
+            ),
+            Text(model.name),
+            MaterialButton(
+              color: Colors.green,
+              child: Text('R\$${model.price.toString()}'),
+              onPressed: () {},
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
