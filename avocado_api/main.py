@@ -31,7 +31,6 @@ def get_avocados():
   except Exception as error:
     return f'Failed to fetch avocados\n{error}', 500
 
-
 @app.get('/avocado/<string:id>')
 def get_avocado_by_id(id: str):
   try: 
