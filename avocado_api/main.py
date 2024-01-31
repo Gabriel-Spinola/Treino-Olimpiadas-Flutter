@@ -25,29 +25,64 @@ def ping():
 @app.get("/avocado/")
 def get_avocados():
   try: 
-    res = supabase_client.table(TABLE_NAME).select('*').execute()
+    res = supabase_client.table(TABLE_NAME).select('*').execute().model_dump()
 
     return jsonify(res), 200
-  except:
-    return 'Failed to fetch avocados', 500
+  except Exception as error:
+    return f'Failed to fetch avocados\n{error}', 500
 
 
-@app.get('/avocado/<int:id>')
-def get_avocado_by_id(avocado_id: int):
+@app.get('/avocado/<string:id>')
+def get_avocado_by_id(id: str):
   try: 
-    res = supabase_client.table(TABLE_NAME).select(avocado_id).execute()
+    res = supabase_client\
+      .table(TABLE_NAME)\
+      .select('*')\
+      .eq('id', id)\
+      .execute()\
+      .model_dump()
 
     return jsonify(res), 200
-  except:
-    return f'Failed fetch avocado with id: {id}', 500
+  except Exception as error:
+    return f'Failed fetch avocado with id: {id}\n{error}', 500
 
 @app.post('/avocado/')
-def add_avocado():
+def upsert_avocado():
   try:
-    res = request.get_json()
+    json_res = request.get_json()
+    avocado = Avocado(name=json_res['name'], amount=json_res['amount'], price=json_res['price'])
+    res = supabase_client.table(TABLE_NAME).insert([avocado.__dict__]).execute()
 
-    avocado = Avocado(name=res['name'], amount=res['amount'], price=res['price'])
+    return jsonify(res), 201
+  except Exception as error:
+    return f'Failed to create new avocado item\n{error}', 500
 
-    return , 201
-  except:
-    return 'Failed to create new avocado item', 500
+@app.delete('/avocado/<string:id>')
+def delete_avocado(id: str):
+  try:
+    res = supabase_client\
+      .table(TABLE_NAME)\
+      .delete()\
+      .eq('id', id)\
+      .execute()\
+      .model_dump()
+    
+    return jsonify(res), 204
+  except Exception as error:
+    return f'Failed to create new avocado item\n{error}', 500
+
+@app.put('/avocado/<string:id>')
+def upsert_avocado(id: str):
+  try:
+    json_res = request.get_json()
+    avocado = Avocado(name=json_res['name'], amount=json_res['amount'], price=json_res['price'])
+
+    res = supabase_client\
+      .table(TABLE_NAME)\
+      .eq('id', id)\
+      .upsert([avocado.__dict__])\
+      .execute()
+
+    return jsonify(res), 201
+  except Exception as error:
+    return f'Failed to upsert avocado item {id}\n{error}', 500

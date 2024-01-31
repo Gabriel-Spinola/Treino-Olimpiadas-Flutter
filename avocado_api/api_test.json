@@ -1,0 +1,7 @@
+{
+  "url": "http://127.0.0.1:5000/avocado/123",
+  "method": "GET",
+  "headers": {
+    "Content-Type": "application/json"
+  }
+}
