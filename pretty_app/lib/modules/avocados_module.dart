@@ -52,7 +52,11 @@ class AvocadoAPI extends ChangeNotifier {
       throw Exception('Failed to load avocado');
     }
 
-    return AvocadoModel.fromJson(response.body as Map<String, dynamic>);
+    dynamic decoded = jsonDecode(response.body);
+
+    // the format of the api is: {count: "value", data: [{"name": "value"}]}
+    // even when we only get one item as response the data is still an array
+    return AvocadoModel.fromJson(decoded['data'][0] as Map<String, dynamic>);
   }
 
   Future<List<AvocadoModel>> getAvocados() async {

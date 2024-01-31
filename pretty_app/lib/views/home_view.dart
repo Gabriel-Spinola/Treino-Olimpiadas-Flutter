@@ -1,9 +1,8 @@
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:pretty_app/components/avocado_item_tile.dart';
 import 'package:pretty_app/modules/avocados_module.dart';
-import 'package:pretty_app/views/intro_view.dart';
+import 'package:pretty_app/views/add_avocado_view.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({super.key});
@@ -90,7 +89,14 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(onPressed: () {}),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AddAvocadoView(),
+          ),
+        ),
+      ),
     );
   }
 }

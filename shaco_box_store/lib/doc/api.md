@@ -100,27 +100,3 @@ FutureBuilder<Model>(
   },
 ),
 ```
-
-in order to se providers you have to add it to the pubspec
-
-in order to conver json data to other data type than string
-
-convert it to string first then the correct data type
-i.e. `double.parse(jsonData['price'].toString())`
-
-in order to retrieve multople data
-loop the decoded data
-
-pseudocode for http requests
-HTTPResponse res = http.method(uri.parse(url))
-if res != 200
-  throw error
-
-dyn decoded = jsonDecode(res.body)
-model = Model.fromJson(decoded)
-
-// if list
-list items = empty(growable)
-
-for Map<str, dyn> data in decoded['data location']
-  items.add(Model.fromJson(data))
